@@ -5558,8 +5558,8 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
 	} /* end of switch */
 
 	if (hba->quirks & UFSHCD_QUIRK_DUMP_DEBUG_INFO)
-		if (host_byte(result) != DID_OK)
-			ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
+	if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
+		ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
 	return result;
 }
 
@@ -6171,8 +6171,8 @@ static void ufshcd_err_handler(struct work_struct *work)
 
 	/*
 	 * if host reset is required then skip clearing the pending
-	 * transfers forcefully because they will automatically get
-	 * cleared after link startup.
+	 * transfers forcefully because they will get cleared during
+	 * host reset and restore
 	 */
 	if (needs_reset)
 		goto skip_pending_xfer_clear;
@@ -6929,11 +6929,17 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
 	int err = 0;
 	unsigned long flags;
 
-	/* Reset the host controller */
+	/*
+	 * Stop the host controller and complete the requests
+	 * cleared by h/w
+	 */
 	spin_lock_irqsave(hba->host->host_lock, flags);
 	hba->ufshcd_state = UFSHCD_STATE_RESET;
 	ufshcd_set_eh_in_progress(hba);
 	ufshcd_hba_stop(hba, false);
+	hba->silence_err_logs = true;
+	ufshcd_complete_requests(hba);
+	hba->silence_err_logs = false;
 	spin_unlock_irqrestore(hba->host->host_lock, flags);
 
 #if defined(CONFIG_PM_DEVFREQ)
@@ -6975,9 +6981,8 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
 static int ufshcd_reset_and_restore(struct ufs_hba *hba)
 {
 	int err = 0;
-	unsigned long flags;
 	int retries = MAX_HOST_RESET_RETRIES;
-
+	unsigned long flags;
 	int tag;
 
 	for_each_set_bit(tag, &hba->outstanding_reqs, hba->nutrs)
