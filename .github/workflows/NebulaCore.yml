@@ -16,7 +16,7 @@ jobs:
       - name: Set Current Date
         uses: szenius/set-timezone@v1.2
         with:
-          timezoneLinux: "America/Sao_Paulo"
+          timezoneLinux: "Asia/Kolkata"
 
       - name: Setting up the environment
         run: |
@@ -32,5 +32,5 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          document: Lemonade-m30s-*.zip
-          message: "New Lemonade Kernel Update for M30s! Download Now!!"
+          document: NebulaCore-m30s-*.zip
+          message: "New NebulaCore Kernel Update for M30s! Download Now!!"

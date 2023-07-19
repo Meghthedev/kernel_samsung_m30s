@@ -4,7 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-ZIPNAME="Lemonade-m30s-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="NebulaCore-m30s-$(date '+%Y%m%d-%H%M').zip"
 TC_DIR="$(pwd)/tc/clang-r399163b1"
 AK3_DIR="$(pwd)/android/AnyKernel3"
 DEFCONFIG="m30s-oneui_defconfig"
@@ -57,7 +57,7 @@ if [ -f "$kernel" ]; then
 	echo -e "\nKernel compiled succesfully! Zipping up...\n"
 	if [ -d "$AK3_DIR" ]; then
 		cp -r $AK3_DIR AnyKernel3
-	elif ! git clone -q https://github.com/GiovanYCringe/AnyKernel3 -b master; then
+	elif ! git clone -q https://github.com/Meghthedev/AnyKernel3 -b master; then
 		echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
 		exit 1
 	fi
