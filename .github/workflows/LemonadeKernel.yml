@@ -3,7 +3,7 @@ name: LemonKernel
 on:
   push:
     branches:
-      - master
+      - test
 
 jobs:
   build:
