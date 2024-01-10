@@ -4,7 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-ZIPNAME="Lemonade-m30s-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="Lemonade-m30s_oneui_-$(date '+%Y%m%d-%H%M').zip"
 TC_DIR="$(pwd)/tc/clang-r399163b1"
 AK3_DIR="$(pwd)/android/AnyKernel3"
 DEFCONFIG="m30s-oneui_defconfig"
